@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recommendation System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #F1F0E8;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #B3C8CF;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            width: 80%; /* Sesuaikan lebar kotak formulir */
+            max-width: 800px; /* Tetapkan lebar maksimum agar tidak terlalu besar */
+            margin: 0 auto; /
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        input[type="submit"] {
+            background-color: #89A8B2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #E5E1DA;
+        }
+
+        .input-skill-section {
+            background-color: #F1F0E8;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px; /* Sesuaikan lebar maksimum */
+            width: 90%; /* Gunakan persentase agar fleksibel */
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .select2-container {
+            width: 100% !important; /* Pastikan kotak Select2 mengambil seluruh lebar */
+        }
+        /* Custom styles for Select2 */
+        .select2-container--default .select2-selection--multiple {
+            border: 2px solid #E5E1DA;
+            border-radius: 10px;
+            padding: 12px;
+            background-color: #E5E1DA;
+            max-width: 1000px; /* Sesuaikan lebar maksimum */
+            width: 100%; /* Gunakan persentase agar fleksibel */
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #89A8B2;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 2px;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: white;
+            cursor: pointer;
+        }
+
+        .visualization-link {
+            text-decoration: underline; 
+            color: #F1F0E8; 
+            padding: 5px 20px; 
+            border-radius: 5px; 
+            display: inline-block; 
+            transition: color 0.3s ease;
+        }
+
+        .visualization-link:hover {
+            color: #E5E1DA; /* Warna saat kursor berada di atas tautan */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Job Recommendation System</h1>
+    
+    <form method="POST" action="{{ url_for('home') }}">
+        <label for="skills">Select Skills:</label>
+        <div class="input-skill-section">
+            <select id="skills" name="skills" multiple>
+                {% for skill in skills %}
+                    <option value="{{ skill }}">{{ skill }}</option>
+                {% endfor %}
+            </select>            
+        </div>
+        <input type="submit" value="Get Recommendations">
+        <!-- Tautan ke halaman submit_skills -->
+        <div style="margin-top: 5px;">
+            <a href="{{ url_for('submit_skills') }}" class="visualization-link">
+                View Visualization
+            </a>
+        </div>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#skills').select2({
+                placeholder: "Select your skills",
+                allowClear: true
+            });
+        });
+    </script>
+
+</body>
+</html>

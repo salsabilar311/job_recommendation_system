@@ -1,0 +1,112 @@
+<!-- templates/skills_data.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #F1F0E8;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        #skills-chart {
+            width: 530px;            /* Tentukan lebar chart secara statis, misalnya 500px */
+            height: 430px;           /* Tentukan tinggi chart secara statis, misalnya 400px */
+            margin: 30px 0 80px 500px; /* Margin atas 30px, margin kanan dan kiri otomatis, margin kiri 50px */
+            display: block;          /* Pastikan chart menjadi block-level element */
+        }
+
+        /* Style for the button */
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #89A8B2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #B3C8CF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Visualization</h1>
+    
+    <div id="skills-chart">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <script>
+        const skills = {{ skills | tojson }};
+        const counts = {{ counts | tojson }};
+    
+        // Combine skills and counts into an array of objects
+        const skillData = skills.map((skill, index) => ({
+            skill: skill,
+            count: counts[index]
+        }));
+    
+        // Sort the skillData array by count in descending order
+        skillData.sort((a, b) => b.count - a.count);
+    
+        // Select the top 10 skills
+        const topSkills = skillData.slice(0, 5);
+        const topSkillLabels = topSkills.map(data => data.skill);
+        const topSkillCounts = topSkills.map(data => data.count);
+    
+        const ctx = document.getElementById('chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie', // Change to 'pie' for a pie chart
+            data: {
+                labels: topSkillLabels,
+                datasets: [{
+                    label: 'Number of Job Titles Requiring Each Skill',
+                    data: topSkillCounts,
+                    backgroundColor: [
+                        '#c9e4ca',
+                        '#87bba2',
+                        '#55828b',
+                        '#3b6064',
+                        '#364958'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw; // Show count
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Back button to return to home -->
+    <a href="/" class="back-button">Back</a>
+</body>
+</html>

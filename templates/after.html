@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        body {
+            background-color: #F1F0E8;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: black;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #89A8B2;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #89A8B2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        a:hover {
+            background-color: #B3C8CF;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px auto;
+            margin-left: 150px;
+            height: 350px;
+        }
+
+        #cosine-chart {
+            width: 60vw;
+            height: 50vh;
+        }
+
+        .highlight {
+            font-weight: bold;
+        }
+
+        .highlight-row {
+            background-color: #F1F0E8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Recommended Jobs</h1>
+
+    <div class="chart-container">
+        <div id="cosine-chart">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const jobRecommendations = {{ recommendations | tojson }};
+        if (jobRecommendations.length > 0) {
+            const jobTitles = jobRecommendations.map(rec => rec.job_title);
+            const cosineValues = jobRecommendations.map(rec => rec.missing_skills.length === 0 ? 100 : rec.cosine_similarity * 100);
+
+            const ctx = document.getElementById('chart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: jobTitles,
+                    datasets: [{
+                        label: 'Match Score (%)',
+                        data: cosineValues,
+                        backgroundColor: [
+                            '#c9e4ca',
+                            '#87bba2',
+                            '#55828b',
+                            '#3b6064',
+                            '#364958'
+                        ],
+                        borderColor: '#B3C8CF',
+                        borderWidth: 1
+                    }]
+                },
+                options : {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    {% if recommendations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Skills Required</th>
+                    <th>Missing Skills</th>
+                    <th>Match Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rec in recommendations %}
+                <tr class="{% if rec.missing_skills|length == 0 %}highlight-row{% endif %}">
+                    <td>{{ rec.job_title }}</td>
+                    <td>
+                        {% for skill in rec.skills %}
+                            <span class="{% if skill in user_skills %}highlight{% endif %}">{{ skill }}</span>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>                    
+                    <td>
+                        {% if rec.missing_skills|length == 0 %}
+                            <span class="highlight">None</span>
+                        {% else %}
+                            {{ ', '.join(rec.missing_skills) }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if rec.missing_skills|length == 0 %}
+                            <span class="highlight">100%</span>
+                        {% else %}
+                            {{ '%.1f' % (rec.cosine_similarity * 100) }}%
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No recommendations available.</p>
+    {% endif %}
+
+    <a href="/">Back</a>
+</body>
+</html>
