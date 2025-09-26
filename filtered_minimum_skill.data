@@ -1,0 +1,10 @@
+job_title,skills
+backend,"sql, java, node, api, git, cloud, docker, go, spring boot, php, python, microservices, azure, aws, kafka, kubernetes, redis, google cloud, laravel, ruby, mysql, javascript"
+business inteligence,"sql, python, tableau, cloud"
+data analyst,"sql, python, tableau, spark, go"
+data engineer,"cloud, python, spark, sql, java, scala, azure, google cloud"
+frontend,"html, java, css, react, git"
+fullstack,"api, react, sql"
+it,"sql, java"
+software engineer,"go, java, kubernetes, redis, git, azure, microservices, aws, cloud"
+web,"react, java, css, html"
