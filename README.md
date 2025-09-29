@@ -25,3 +25,7 @@ Metode yang digunakan adalah **CRISP-DM**, dengan tahapan:
 4. **Modeling** – sistem mencocokkan job skills pengguna dengan deskripsi pekerjaan.  
 5. **Evaluation** – menilai akurasi rekomendasi terhadap kebutuhan industri.  
 6. **Deployment** – sistem diimplementasikan sebagai aplikasi web dengan Flask + HTML.  
+
+## 📱 Screenshots
+<img width="1363" height="628" alt="image" src="https://github.com/user-attachments/assets/38493e83-fea8-4972-9426-3af701cb21bc" />
+<img width="1366" height="877" alt="image" src="https://github.com/user-attachments/assets/ec56d286-51cb-4f9b-b065-3b97cd322ba1" />
